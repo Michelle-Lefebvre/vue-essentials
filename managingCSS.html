@@ -14,6 +14,17 @@
     />
     <!-- fontawesome cdn  -->
     <script src="https://use.fontawesome.com/releases/v5.7.0/css/all.css" variant="53de946a96.js"></script>
+
+    <!-- animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <style>
+      .fade-enter, .fade-leave-to {
+        opacity: 0;
+      }
+      .fade-enter-active, .fade-leave-active {
+        transition: all 1s ease-in-out;
+      }
+    </style>
   </head>
 
   <body class="container mt-4">
@@ -44,7 +55,7 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="template.html">Templates</a>
+              <a class="nav-link" href="templates.html">Templates</a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="managingCSS.html" style="color: #18ffff"
@@ -71,29 +82,65 @@
       </nav>
 
       <h1 class="mt-5">My Shop</h1>
-      <div class="align-items-center" :class="sliderState">
-        <label :class="labelArr" for="formMax">max</label>
-        <input
-          type="text"
-          id="formMax"
-          class="form-control mx-2"
-          :style="{'width': inputWidth + 'px', textAlign:'center'}"
-          v-model="maximum"
-        />
-        <input
-          type="range"
-          class="custom-range"
-          min="0"
-          max="200"
-          v-model="maximum"
-        />
-      </div>
+<!-- animation -->
+      <!-- <transition name="fade"> -->
+<!-- animation using animate.css  -->
+        <transition 
+          name="custom" 
+          enter-active-class="animated fadeInDown"
+          leave-active-class="animated slideOutRight">
+        <div v-if="sliderStatus">
 
-      <div
-        class="row d-flex mb-3 align-items-center"
-        v-for="item in products"
-        v-if="item.price<=Number(maximum)"
+          <div class="align-items-center" :class="sliderState">
+            <label :class="labelArr" for="formMax">max</label>
+            <input
+            type="text"
+            id="formMax"
+            class="form-control mx-2"
+            :style="{'width': inputWidth + 'px', textAlign:'center'}"
+            v-model="maximum"
+            />
+            <input
+            type="range"
+            class="custom-range"
+            min="0"
+            max="200"
+            v-model="maximum"
+            />
+          </div>
+          
+        </div>
+      </transition>
+      <!-- animation using animate.css  -->
+      <!-- 
+      <transition-group name="fade" tag="div"
+      enter-active-class="animated fadeInRight"
+      leave-active-class="animated fadeOutRight"
       >
+        <div
+        class="row d-flex mb-3 align-items-center"
+        v-for="(item, index) in products" 
+        :key="item.id"
+        v-if="item.price<=Number(maximum)"
+        >
+      </transition-group>
+    -->
+<!-- animation using javascript & animate.css-->
+
+    <transition-group name="fade" tag="div"
+      @beforeEnter="beforeEnter"
+      @enter="enter"
+      @leave="leave"
+      >
+        <div
+        class="row d-none mb-3 align-items-center"
+        v-for="(item, index) in products" 
+        :key="item.id"
+        v-if="item.price<=Number(maximum)"
+        :datta-index="index"
+        >
+      </transition-group>
+
         <div class="col-1 m-auto">
           <button class="btn btn-info" v-on:click="addItem(item)">+</button>
         </div>
@@ -131,6 +178,22 @@
           },
         },
         methods: {
+          beforeEnter: function (el) {
+            el.className='d-none'
+          },
+          enter: function (el) {
+            var delay=el.dataset.index * 100;
+            setTimeout(function() {
+              el.className='row d-flex mb-3 align-items-center animated fadeInRight'
+            }, delay);
+          },
+          leave: function (el) {
+            var delay=el.dataset.index * 100;
+            setTimeout(function() {
+              el.className='row d-flex mb-3 align-items-center animated fadeOutRight'
+            }, delay);
+          },
+
           addItem: function (product) {
             this.cart.push(product);
           },
