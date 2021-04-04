@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overview | Chapter 1</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body class="container mt-4">
+    <div id="app">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <a class="navbar-brand" href="#" style="color: #16a3b8">Vue.js Essential Training</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link" href="index.html">Overview <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="template.html">Templates</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="managingCSS.html">Managing CSS</a>
+                </li>
+                
+              </ul>
+            </div>
+          </nav>
+      <nav
+        class="navbar navbar-light bg-light mt-5"
+        v-if="cart.length>0"
+        style="z-index:-1;background: #fff;"
+      >
+        <div class="navbar-text ml-auto">
+          <b>cart:</b>
+          <span class="badge badge-pill badge-success">{{ cart.length }}</span>
+        </div>
+      </nav>
+
+      <div class="form-inline mr-auto mt-5">
+        <label class="font-weight-bold mr-2" for="formMax">max</label>
+        <input
+          type="text"
+          id="formMax"
+          class="form-control w-25"
+          v-model="maximum"
+        />
+        <input
+          type="range"
+          class="custom-range"
+          min="0"
+          max="200"
+          v-model="maximum"
+        />
+      </div>
+      <div
+        class="row d-flex mb-3 align-items-center"
+        v-for="item in products"
+        v-if="item.price <= Number(maximum)"
+      >
+        <div class="col-1 m-auto">
+          <button class="btn btn-info" v-on:click="addItem(item)">+</button>
+        </div>
+        <div class="col-4">
+          <img class="img-fluid d-block" :src="item.image" :alt="item.name" />
+        </div>
+        <div class="col">
+          <h3 class="text-info">{{ item.name }}</h3>
+          <p class="mb-0">{{ item.description }}</p>
+          <div class="h5 float-right">${{ Number(item.price) }}</div>
+        </div>
+      </div>
+    </div>
+    <!-- closing app  -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+      var app = new Vue({
+        el: "#app",
+        data: {
+          maximum: 99,
+          products: null,
+          cart: [],
+        },
+        methods: {
+            addItem: function(product) {
+                this.cart.push(product);
+            }
+        },
+        mounted: function () {
+          fetch("https://hplussport.com/api/products/order/price")
+            .then((response) => response.json())
+            .then((data) => {
+              this.products = data;
+            });
+        },
+      });
+    </script>
+  </body>
+</html>
