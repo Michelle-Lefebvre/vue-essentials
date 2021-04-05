@@ -11,35 +11,206 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+   <!-- bootstrap cdn -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+   integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+<!-- fontawesome cdn  -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" />
+<!-- <script src="https://use.fontawesome.com/releases/v5.7.0/css/all.css" variant="53de946a96.js"></script> -->
+
   </head>
   <body class="container mt-4">
     <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="color:PapayaWhip">
-            <a class="navbar-brand" href="#" style="color: MediumVioletRed">Vue.js Essential Training</a>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background: Purple;">
+            <a class="navbar-brand" href="#" style="color: Plum">Vue.js Essential Training</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link" href="index.html">Overview</a>
+                  <a class="nav-link" style="color: white" href="index.html">Overview</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="templates.html">Templates</a>
+                  <a class="nav-link" style="color: white" href="templates.html">Templates</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="managingCSS.html">Managing CSS</a>
+                  <a class="nav-link" style="color: white" href="managingCSS.html">Managing CSS</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="digdeeper.html">Digging Deeper</a>
+                  <a class="nav-link" style="color: white" href="digdeeper.html">Digging Deeper</a>
                 </li>
                 <li class="nav-item active">
-                  <a class="nav-link" href="components.html" style="color: MediumVioletRed">Components<span class="sr-only">(current)</span></a>
+                  <a class="nav-link" href="components.html" style="color: Plum">Components<span class="sr-only">(current)</span></a>
                 </li>
               </ul>
             </div>
           </nav>
+          <nav class="navbar navbar-light fixed-top mt-5">
+            <div class="navbar-text ml-auto d-flex">
+                <button class="btn btn-sm btn-outline-success" v-on:click="sliderStatus = !sliderStatus">
+                    <i class="fas fa-dollar-sign"></i>
+                </button>
+                <div class="dropdown ml-2" v-if="cart.length>0">
+                    <button class="btn btn-success btn-sm dropdown-toggle" id="cartDropdown" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
 
+                        <span class="badge badge-pill badge-light">{{ cartQty }}</span>
+                        <i class="fas fa-cart-plus mx-2"></i>{{ cartTotal | currency }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cartDropdown">
+                        <div v-for="(item, index) in cart" :key="index">
+                            <div class="dropdown-item-text text-nowrap text-right">
+                                <span class="badge badge-pill badge-warning align-text-top mr-1">{{ item.qty }}</span>
+                                {{ item.product.name }}
+                                <b>{{ item.qty * item.product.price | currency }}</b>
+                                <a href="#" @click.stop="deleteItem(index)" class="badge badge-danger text-white">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-          </div>
-          </body>
+        <h1 class="mt-5">My Shop</h1>
+        <!-- animation -->
+        <!-- <transition name="fade"> -->
+        <!-- animation using animate.css  -->
+        <transition name="custom" enter-active-class="animated fadeInDown" leave-active-class="animated slideOutRight">
+            <div v-if="sliderStatus">
+
+                <div class="align-items-center" :class="sliderState">
+                    <label :class="labelArr" for="formMax">max</label>
+                    <input type="text" id="formMax" class="form-control mx-2"
+                        :style="{'width': inputWidth + 'px', textAlign:'center'}" v-model="maximum" />
+                    <input type="range" class="custom-range" min="0" max="200" v-model="maximum" />
+                </div>
+
+            </div>
+        </transition>
+
+        <transition-group name="fade" tag="div" @beforeEnter="beforeEnter" @enter="enter" @leave="leave">
+            <div class="row d-none mb-3 align-items-center" v-for="(item, index) in products" :key="item.id"
+                v-if="item.price<=Number(maximum)" :datta-index="index">
+        </transition-group>
+
+        <div class="col-1 m-auto">
+            <button class="btn btn-info" v-on:click="addItem(item)"><i class="fas fa-plus"></i></button>
+        </div>
+        <div class="col-4">
+            <img class="img-fluid d-block" :src="item.image" :alt="item.name" />
+        </div>
+        <div class="col">
+            <h3 class="text-info">{{ item.name }}</h3>
+            <p class="mb-0">{{ item.description }}</p>
+            <div class="h5 float-right">{{ item.price | currency }}</div>
+        </div>
+    </div>
+    </div>
+    <!-- closing app  -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        Vue.filter('currency', function () {
+
+        })
+        var app = new Vue({
+            el: "#app",
+            data: {
+                inputWidth: 60,
+                sliderStatus: false,
+                labelArr: ["font-weight-bold", "mr-2"],
+                maximum: 99,
+                products: null,
+                cart: [],
+            },
+            computed: {
+                cartTotal: function () {
+                    let sum = 0;
+                    for (key in this.cart) {
+                        sum = sum + (this.cart[key].product.price * this.cart[key].qty);
+                    }
+                    return sum;
+                },
+                cartQty: function () {
+                    let qty = 0;
+                    for (key in this.cart) {
+                        qty = qty + this.cart[key].qty;
+                    }
+                    return qty;
+                },
+                sliderState: function () {
+                    return this.sliderStatus ? "d-flex" : "d-none";
+                },
+            },
+            methods: {
+                beforeEnter: function (el) {
+                    el.className = 'd-none'
+                },
+                enter: function (el) {
+                    var delay = el.dataset.index * 100;
+                    setTimeout(function () {
+                        el.className = 'row d-flex mb-3 align-items-center animated fadeInRight'
+                    }, delay);
+                },
+                leave: function (el) {
+                    var delay = el.dataset.index * 100;
+                    setTimeout(function () {
+                        el.className = 'row d-flex mb-3 align-items-center animated fadeOutRight'
+                    }, delay);
+                },
+
+                addItem: function (product) {
+                    var whichProduct;
+                    var existing = this.cart.filter(function (item, index) {
+                        if (item.product.id == Number(product.id)) {
+                            whichProduct = index;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
+
+                    if (existing.length) {
+                        this.cart[whichProduct].qty++
+                    } else {
+                        this.cart.push({ product: product, qty: 1 })
+                    }
+                },
+                deleteItem: function (id) {
+                    if (this.cart[id].qty > 1) {
+                        this.cart[id].qty--;
+                    } else {
+                        this.cart.splice(id, 1);
+                    }
+                }, deleteItem: function (id) {
+                    if (this.cart[id].qty > 1) {
+                        this.cart[id].qty--;
+                    } else {
+                        this.cart.splice(id, 1);
+                    }
+                }
+            },
+            mounted: function () {
+                fetch("https://hplussport.com/api/products/order/price")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        this.products = data;
+                    });
+            },
+            filters: {
+                currency: function (value) {
+                    return '$' + Number.parseFloat(value).toFixed(2);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

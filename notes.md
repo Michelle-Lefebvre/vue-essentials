@@ -20,14 +20,17 @@ For more on v-bind https://vuejs.org/v2/guide/class-and-style.html
       "image": "https://hplussport.com/wp-content/uploads/2016/12/slicker-jacket_LYNDA_29941.jpg
     },
 
-##LOOPS v-for
+
+LOOPS v-for
 v-for=“item in products”
 
 CONDITIONAL DATA	v-if, v-else, v-elseif
 
-##USER INPUT
+
+USER INPUT
 :value 	just shows the value
 v-model=“maximum”	To set the value
+
 
 API CALLs	mounted app ready to be displayed
 mounted: function() {
@@ -45,15 +48,29 @@ fetch('https://hplussport.com/api/products/order/price')
                     this.products = data;
 }
 
-Events	v-on:  | @:
+
+EVENTS	v-on:  | @:
 v-on:click="cart.push(item)"
 
 
 Toggle on|off
 <button @click=“sliderStatus = !sliderStatus”></button>
 
-TRANSITIONS & ANIMATIONS
 
+FONT AWESOME
+1. Put in head
+<!-- fontawesome cdn  -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" />
+
+    NOTE: This custom fontawesome did not work:
+    <script src="https://use.fontawesome.com/releases/v5.7.0/css/all.css" variant="53de946a96.js"></script>
+
+2. Add in body
+<i class="fas fa-dollar-sign"></i>
+
+
+
+TRANSITIONS & ANIMATIONS
 https://v3.vuejs.org/guide/transitions-overview.html#transitions-with-style-bindings
 
 To add animation
@@ -69,7 +86,7 @@ To add animation
 
 https://daneden.github.io/animate.css/
 
-##TRANSITION-GROUP use for animating lists
+TRANSITION-GROUP use for animating lists
 
       <transition-group name="fade" tag="div">
         <div
@@ -80,7 +97,7 @@ https://daneden.github.io/animate.css/
         >
       </transition-group>
 
-#TRANSITION-GROUP w/ animate.css library
+TRANSITION-GROUP w/ animate.css library
 https://animate.style/
 
 <transition-group name="fade" tag="div"
@@ -95,3 +112,33 @@ https://animate.style/
         >
       </transition-group>
 
+
+FILTERS
+Filters can be defined outside the main view object.
+
+Use to format all prices
+1. Create filter in 
+
+var app = new Vue({
+filters: {
+                currency: function(value){
+                    return '$' + Number.parseFloat(value).toFixed(2);
+                }
+            }
+2. Add in html
+<div class="h5 float-right">{{ item.price | currency }}</div>
+
+Filters can be defined outside the main view object.
+Same as methods
+So if I want to apply a filter to more than one element in multiple view instances
+
+Vue.filter(‘currency’, function () {
+ return '$' + Number.parseFloat(value).toFixed(2);
+})
+
+To Chain filters
+<div class="h5 float-right">{{ item.price | currency | anotherFilter }}</div>
+Can be written as {{}} or v-bind
+
+
+TOGGLING ELEMENTS WITH A KEY
