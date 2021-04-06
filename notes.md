@@ -142,3 +142,90 @@ Can be written as {{}} or v-bind
 
 
 TOGGLING ELEMENTS WITH A KEY
+ <div class="ml-2" v-if="cart.length>0">
+    <button class="btn btn-success btndropdown-toggle" 
+        id="cartDropdown" 
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        <b>cart:</b>
+        <span class="badge badge-pill badge-success"cart.length }}</span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right"
+        aria-labelledby="cartDropdown">
+        <div v-for="(item, index) in cart" :key="index">
+            <div class="dropdown-item-text text-nowrap text-right">
+                <span class="badge badge-pill badge-warning align-text-top mr-1">{{ item.qty }}</span>
+                                {{ item.name }}
+                <b>{{ item.price | currency }}</b>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+COMPONENTS
+
+HTML: create a tag with the same name as the component name.
+<div class="h5 float-right"><price></price>></div>
+
+JS: 
+Vue.component('price', {
+    date: function () {
+        return {
+            prefix: '$',
+            value: 22.34,
+            precision: 2,
+        }
+    },
+    template: '<span>{{ this.prefix + Number.parseFlloat(this.value).toFix(this.precision) }}</span>'
+    // note template can be written in multiple lines using the `` tilda instead of single quotes
+});
+
+
+PROPS
+A prop is like an HTML attribute. Can be an array of something we pass along
+<price :value="item.price"></price>
+or v-bind:value=“item.price”
+
+Vue.component('price', {
+    data: function () {
+        return {
+            prefix: '$',
+            precision: 2,
+        }
+    },
+    props: ['value'],
+    template: '<span>{{ this.prefix + Number.parseFloat(this.value).toFixed(this.precision) }}</span>'
+    // note template can be written in multiple lines using the `` tildinstead of single quotes
+});
+
+Don’t need to store prefix, percision eat in data but can put in html: 
+<price  :value="item.price" 
+        :prefix="'&euro;'"
+        :precision="2"
+        :conversion=".87">
+</price>
+
+Vue.component('price', {
+    data: function () {
+        return {
+                
+        }
+    },
+    props: {
+        value: Number,
+        prefix: {
+            type: Number,
+            default: '$'
+        },
+        precision: {
+            type: Number,
+            default: 2
+        },
+        conversion: {
+            type: Number,
+            default: 2
+        },
+    template: '<span>{{ this.prefix + Number.parseFloat(this.value * this.conversion).toFixed(this.precision) }}</span>'
+});

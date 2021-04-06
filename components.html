@@ -1,52 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Components | Chapter 5</title>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
-   <!-- bootstrap cdn -->
-   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-   integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
-<!-- fontawesome cdn  -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" />
-<!-- <script src="https://use.fontawesome.com/releases/v5.7.0/css/all.css" variant="53de946a96.js"></script> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <!-- bootstrap cdn -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <!-- fontawesome cdn  -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" />
+    <!-- <script src="https://use.fontawesome.com/releases/v5.7.0/css/all.css" variant="53de946a96.js"></script> -->
 
-  </head>
-  <body class="container mt-4">
+</head>
+
+<body class="container mt-4">
     <div id="app">
         <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background: Purple;">
             <a class="navbar-brand" href="#" style="color: Plum">Vue.js Essential Training</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link" style="color: white" href="index.html">Overview</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" style="color: white" href="templates.html">Templates</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" style="color: white" href="managingCSS.html">Managing CSS</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" style="color: white" href="digdeeper.html">Digging Deeper</a>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="components.html" style="color: Plum">Components<span class="sr-only">(current)</span></a>
-                </li>
-              </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white" href="index.html">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white" href="templates.html">Templates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white" href="managingCSS.html">Managing CSS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white" href="digdeeper.html">Digging Deeper</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="components.html" style="color: Plum">Components<span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
             </div>
-          </nav>
-          <nav class="navbar navbar-light fixed-top mt-5">
+        </nav>
+        <nav class="navbar navbar-light fixed-top mt-5">
             <div class="navbar-text ml-auto d-flex">
                 <button class="btn btn-sm btn-outline-success" v-on:click="sliderStatus = !sliderStatus">
                     <i class="fas fa-dollar-sign"></i>
@@ -105,7 +105,13 @@
         <div class="col">
             <h3 class="text-info">{{ item.name }}</h3>
             <p class="mb-0">{{ item.description }}</p>
-            <div class="h5 float-right">{{ item.price | currency }}</div>
+            <div class="h5 float-right">
+                <price  :value="item.price" 
+                        :prefix="'&euro;'"
+                        :precision="2"
+                        :conversion=".87">
+                </price>
+            </div>
         </div>
     </div>
     </div>
@@ -117,9 +123,17 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
     <script>
-        Vue.filter('currency', function () {
+        Vue.component('price', {
+            data: function () {
+                return {
+                
+                }
+            },
+            props: ['value', 'prefix', 'precision', 'conversion'],
+            template: '<span>{{ this.prefix + Number.parseFloat(this.value * this.conversion).toFixed(this.precision) }}</span>'
+            // note template can be written in multiple lines using the `` tilda instead of single quotes
+        });
 
-        })
         var app = new Vue({
             el: "#app",
             data: {
