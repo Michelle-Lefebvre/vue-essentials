@@ -216,7 +216,7 @@ Vue.component('price', {
     props: {
         value: Number,
         prefix: {
-            type: Number,
+            type: String,
             default: '$'
         },
         precision: {
@@ -225,7 +225,10 @@ Vue.component('price', {
         },
         conversion: {
             type: Number,
-            default: 2
+            default: 1
         },
     template: '<span>{{ this.prefix + Number.parseFloat(this.value * this.conversion).toFixed(this.precision) }}</span>'
 });
+
+
+Props can pass along either an array of elements or as an object An object is more flexible because you can pass along the type. If required, default, sub-object
